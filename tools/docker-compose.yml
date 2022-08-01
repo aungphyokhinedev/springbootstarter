@@ -1,0 +1,135 @@
+version: '3.5'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  consul-server:
+    image: hashicorp/consul:1.10.0
+    container_name: consul-server
+    restart: always
+    volumes:
+      - ./server.json:/consul/config/server.json:ro
+    networks:
+      - postgres
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    command: "agent"
+
+  consul-client:
+      image: hashicorp/consul:1.10.0
+      container_name: consul-client
+      restart: always
+      volumes:
+        - ./client.json:/consul/config/client.json:ro
+      networks:
+        - postgres
+      command: "agent"
+
+  fabio:
+    image: fabiolb/fabio
+    container_name: fabio
+    ports:
+      - "9999:9999"
+      - "9998:9998"
+    volumes:
+      - ./fabio.properties:/etc/fabio/fabio.properties
+    networks:
+      - postgres
+    environment:
+      - SERVICE_9998_TAGS=urlprefix-/fabio
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - postgres
+    restart: unless-stopped
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: 'zipkin'
+    ports:
+      - 9411:9411
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.36.2
+    container_name: 'prometheus'
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9000:9090
+    networks:
+      - postgres
+    restart: always
+
+  grafana:
+      image: grafana/grafana
+      container_name: 'grafana'
+      ports:
+        - 3000:3000
+      networks:
+        - postgres
+      restart: always
+
+  seq:
+    image: datalust/seq
+    container_name: 'seq'
+    ports:
+        - 9001:80
+        - 5341:5341
+    environment:
+        - ACCEPT_EULA=Y
+    volumes:
+      - ./seq/:/data
+    networks:
+        - postgres
+    restart: always
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  prometheus_data: {}

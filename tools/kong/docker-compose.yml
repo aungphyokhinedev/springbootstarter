@@ -1,0 +1,84 @@
+version: "3.5"
+
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  postgres:
+  kong:
+
+services:
+
+  #######################################
+  # Postgres: The database used by Kong
+  #######################################
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  #######################################
+  # Kong database migration
+  #######################################
+  kong-migration:
+    container_name: kong-migration
+    image: kong/kong-gateway:2.8.1.1-alpine
+    command: "kong migrations bootstrap"
+    networks:
+      - postgres
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
+      KONG_PASSWORD: password
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  #######################################
+  # Kong: The API Gateway
+  #######################################
+  kong:
+    image: kong/kong-gateway:2.8.1.1-alpine
+    container_name: kong
+    restart: unless-stopped
+    networks:
+      - postgres
+    volumes:
+      - kong:/tmp
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_ADMIN_GUI_URL: http://localhost:8002
+    depends_on:
+      - kong-migration
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://kong:8001"]
+      interval: 5s
+      timeout: 2s
+      retries: 15
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+      - "8002:8002"
+

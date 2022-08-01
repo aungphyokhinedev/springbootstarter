@@ -1,0 +1,57 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: customer
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/customer
+    password: password
+  jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+        healthCheckPath: /api/v1/customers/health
+        healthCheckInterval: 15s
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          multiplier: 2
+        max-concurrency: 5
+        concurrency: 5
+
+logging:
+    file:
+      path: ./log
+    pattern:
+      console: "%d %-5level %logger : %msg%n"
+      file: "%d %-5level [%thread] %logger : %msg%n"
+
+
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,prometheus
+
+

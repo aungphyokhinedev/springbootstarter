@@ -1,0 +1,24 @@
+{"@t":"2022-07-23T21:46:51.9529367Z","@mt":"Seq {SeqVersion} running on OS {OSCaption}","SeqVersion":"2022.1.7647","OSCaption":"Linux 4.15.0-132-generic #136-Ubuntu SMP Tue Jan 12 14:58:42 UTC 2021","SourceContext":"Seq.Server.Features.Diagnostics.EnvironmentInformationWriter"}
+{"@t":"2022-07-23T21:46:52.1084347Z","@mt":"Seq detected {TotalRAM} MB of RAM","TotalRAM":8270.336,"SourceContext":"Seq.Server.Features.Diagnostics.EnvironmentInformationWriter"}
+{"@t":"2022-07-23T21:47:18.8466281Z","@mt":"Opening event store at {StreamPath}","StreamPath":"/data/Stream/stream.flare","SourceContext":"Flare.Cluster.StorageNodeCoordinator"}
+{"@t":"2022-07-23T21:47:23.3258631Z","@mt":"Ingestion enabled","SourceContext":"Flare.Cluster.StorageNodeCoordinator"}
+{"@t":"2022-07-23T21:47:23.5621686Z","@mt":"Cache warm-up is required","SourceContext":"Flare.Cache.SegmentCache","OperationId":"015840d9-8c78-4112-a72b-0a3c6372d3ba"}
+{"@t":"2022-07-23T21:47:23.6699349Z","@mt":"Opening metastore {MetastorePath}","MetastorePath":"/data/Documents/metastore.flare","SourceContext":"Quince.Storage.Native.NativeDocumentStore"}
+{"@t":"2022-07-23T21:47:25.1671835Z","@mt":"Initial memory cache warm-up {Outcome} in {Elapsed:0.0} ms","@r":["1605.0"],"Outcome":"completed","Elapsed":1604.9993,"OperationId":"015840d9-8c78-4112-a72b-0a3c6372d3ba"}
+{"@t":"2022-07-23T21:47:25.1778907Z","@mt":"{WarmSegments} segments warmed up ({@Shared})","WarmSegments":515,"Shared":{"Schemata":11,"Strings":691},"SourceContext":"Flare.Cache.SegmentCache"}
+{"@t":"2022-07-23T21:47:27.8924356Z","@mt":"Storage subsystem available"}
+{"@t":"2022-07-23T21:47:29.5394219Z","@mt":"Seq listening on {ListenUris}","ListenUris":["http://localhost/","https://localhost/","http://localhost:5341/","https://localhost:45341/"]}
+{"@t":"2022-07-23T21:48:29.7129352Z","@mt":"{CollectionCount} more generation 2 garbage collection(s) occurred","CollectionCount":1,"SourceContext":"Seq.Server.Features.Diagnostics.GCLogger"}
+{"@t":"2022-07-23T21:48:56.4540960Z","@mt":"Termination signal received"}
+{"@t":"2022-07-23T21:48:56.4756513Z","@mt":"Signalling for {Workers} worker task(s) to complete","Workers":3,"SourceContext":"Flare.Workers.WorkerPool"}
+{"@t":"2022-07-23T21:48:56.7182864Z","@mt":"Work {WorkDescription} ({WorkId}) observed cancellation and completed","WorkDescription":"Monitor alerts and trigger notifications","WorkId":"c17ed03a-cd64-4857-9eef-b698ece249e8","SourceContext":"Flare.Workers.WorkerPool"}
+{"@t":"2022-07-23T21:48:57.3365164Z","@mt":"Work {WorkDescription} ({WorkId}) observed cancellation and completed","WorkDescription":"Manage event cache resources","WorkId":"04c11cc4-94d8-418e-af92-1f54fcdf0df9","SourceContext":"Flare.Workers.WorkerPool"}
+{"@t":"2022-07-23T21:48:58.3473811Z","@mt":"Work {WorkDescription} ({WorkId}) observed cancellation and completed","WorkDescription":"Sample system memory","WorkId":"868c8f98-ff13-4d25-be06-d09e82c034c0","SourceContext":"Flare.Workers.WorkerPool"}
+{"@t":"2022-07-23T21:48:58.3801169Z","@mt":"Stopping {Tasks} scheduled tasks","Tasks":15,"SourceContext":"Seq.Server.Tasks.TaskRunner"}
+{"@t":"2022-07-23T21:48:58.3838546Z","@mt":"Stopping input channel","SourceContext":"Seq.Server.Features.Apps.Inputs.InputChannel"}
+{"@t":"2022-07-23T21:48:58.6643580Z","@mt":"Shutting down input channel; {AcceptedCount} queued events will be written","AcceptedCount":0,"SourceContext":"Seq.Server.Features.Apps.Inputs.InputChannel"}
+{"@t":"2022-07-23T21:48:58.6648971Z","@mt":"Stopping broadcast channel","SourceContext":"Flare.Broadcast.BroadcastChannel"}
+{"@t":"2022-07-23T21:48:59.6546548Z","@mt":"Shutting down broadcast channel with {AllowableFlush} flushable event batches (+{Tolerance} tolerance)","AllowableFlush":0,"Tolerance":15,"SourceContext":"Flare.Broadcast.BroadcastChannel"}
+{"@t":"2022-07-23T21:48:59.6575013Z","@mt":"Closing event store","SourceContext":"Flare.Cluster.StorageNodeCoordinator"}
+{"@t":"2022-07-23T21:48:59.6580299Z","@mt":"Closing metastore","SourceContext":"Quince.Storage.Native.NativeDocumentStore"}
+{"@t":"2022-07-23T21:48:59.6598423Z","@mt":"Server stopped cleanly"}
